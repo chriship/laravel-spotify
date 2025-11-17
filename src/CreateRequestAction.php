@@ -21,7 +21,14 @@ class CreateRequestAction
         $requestedParams = collect($pendingRequest->requestedParams);
         $finalParams = $this->createFinalParams($acceptedParams, $requestedParams);
 
-        $response = resolve(SpotifyRequest::class)->get($endpoint, $finalParams);
+        // Use custom access token if provided, otherwise use the default from the container
+        if ($pendingRequest->accessToken) {
+            $spotifyRequest = new SpotifyRequest($pendingRequest->accessToken);
+        } else {
+            $spotifyRequest = resolve(SpotifyRequest::class);
+        }
+
+        $response = $spotifyRequest->get($endpoint, $finalParams);
 
         if ($responseArrayKey) {
             return $response[$responseArrayKey];

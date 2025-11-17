@@ -12,6 +12,8 @@ class PendingRequest
 
     public $requestedParams;
 
+    public $accessToken;
+
     public function __construct(string $endpoint, array $acceptedParams = [])
     {
         $this->endpoint = $endpoint;
@@ -140,6 +142,18 @@ class PendingRequest
     public function timestamp(string $timestamp): self
     {
         $this->setRequestedParam('timestamp', $timestamp);
+
+        return $this;
+    }
+
+    /**
+     * Set a custom access token to use for this request instead of client credentials.
+     *
+     * @return $this
+     */
+    public function withAccessToken(string $accessToken): self
+    {
+        $this->accessToken = $accessToken;
 
         return $this;
     }
